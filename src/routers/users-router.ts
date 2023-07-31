@@ -1,8 +1,11 @@
 import { Router } from "express";
+
+import { createUserSchema } from "@/schemas";
 import { validateBody } from "@/middlewares";
-import { createUserController } from "@/controllers";
-import { userSchema } from "@/schemas";
+import { usersPost } from "@/controllers";
 
-export const usersRouter = Router();
+const usersRouter = Router();
 
-//usersRouter.post("/", validateBody(userSchema), createUserController)
+usersRouter.post("/", validateBody(createUserSchema), usersPost);
+
+export { usersRouter };
