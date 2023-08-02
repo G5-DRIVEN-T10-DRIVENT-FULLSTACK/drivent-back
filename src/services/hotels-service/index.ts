@@ -3,6 +3,7 @@ import enrollmentRepository from "@/repositories/enrollment-repository";
 import ticketRepository from "@/repositories/ticket-repository";
 import { notFoundError } from "@/errors";
 import { cannotListHotelsError } from "@/errors/cannot-list-hotels-error";
+import { AccommodationTypes } from "@/protocols";
 
 async function getHotelsRoomsBookings(userId: number) {
     //Tem enrollment?
@@ -22,6 +23,7 @@ async function getHotelsRoomsBookings(userId: number) {
     //const hotelsRoomsBookingsArray = Object.values(hotelsRoomsBookings);
     //console.log(hotelsRoomsBookingsArray);
     const roomsArray = hotelsRoomsBookings.rooms;
+    const hotelsArray = hotelsRoomsBookings.hotels;
     //console.log(roomsArray);
     //const roomWithCapacitySingle = (!!roomsArray.find((r) => r.capacity === 1)) ? "Single" : false;
     //const roomWithCapacityDouble = (!!roomsArray.find((r) => r.capacity === 2)) ? "Double" : false;
@@ -87,16 +89,22 @@ async function getHotelsRoomsBookings(userId: number) {
         //console.log("capacityString", capacityString);
         capacityStringArray.push(capacityString);
     }
-    type AccommodationTypes = {
-        hotelIdArray: number[];
-        typeStringArray: string[];
-    };
+    const hotelNameArray: string[] = [];
+    const hotelImageArray: string[] = [];
+
+    hotelsArray.forEach((h) => {
+        hotelNameArray.push(h.name);
+        hotelImageArray.push(h.image);
+    });
+
     const accommodation: AccommodationTypes = {
         hotelIdArray: uniqueHotelIds,
-        typeStringArray: capacityStringArray
+        typeStringArray: capacityStringArray,
+        hotelNameArray,
+        hotelImageArray
     };
 
-    console.log('accommodation',accommodation);
+    console.log('accommodation', accommodation);
 
 
     return hotelsRoomsBookings;
