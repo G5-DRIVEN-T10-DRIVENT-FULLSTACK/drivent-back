@@ -129,10 +129,23 @@ async function getHotelsRoomsBookings(userId: number) {
         hotelVacanciesArray
     }
 
-    console.log('accommodation', accommodation);
-    console.log('vacancies', vacancies);
+    //console.log('accommodation', accommodation);
+    //console.log('vacancies', vacancies);
 
-    return hotelsRoomsBookings;
+    //hotelsRoomsBookings.vacancies = vacancies;
+    //hotelsRoomsBookings.accommodation = accommodation;
+
+    //console.log('hotelsRoomsBookings', hotelsRoomsBookings);
+
+    const sendableObject = {
+        hotels: hotelsRoomsBookings.hotels,
+        rooms: hotelsRoomsBookings.rooms,
+        bookings: hotelsRoomsBookings.bookings,
+        accommodation,
+        vacancies
+    };
+
+    return sendableObject;
 }
 
 
