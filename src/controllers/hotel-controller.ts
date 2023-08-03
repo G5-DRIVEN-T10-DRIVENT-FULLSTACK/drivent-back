@@ -12,6 +12,12 @@ export async function getHotelsRoomsBookings(req: AuthenticatedRequest, res: Res
     }
     catch (e) {
         console.log(e.message);
+        if (e.name === "cannotListHotelsError") {
+            return res.sendStatus(httpStatus.PAYMENT_REQUIRED);
+        }
+        if(e.message === "NoHotel"){
+            return res.sendStatus(httpStatus.UNAUTHORIZED)
+        }
         return res.sendStatus(httpStatus.BAD_REQUEST);
     }
 }
