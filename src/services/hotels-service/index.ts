@@ -138,11 +138,38 @@ async function getHotelsRoomsBookings(userId: number) {
     //console.log('hotelsRoomsBookings', hotelsRoomsBookings);
 
     const sendableObject = {
-        hotels: hotelsRoomsBookings.hotels,
+        hotels: hotelsRoomsBookings.hotels.map((hotel) => {
+            // Encontrar o índice correspondente do hotel em accommodation.hotelIdArray
+            const index = accommodation.hotelIdArray.indexOf(hotel.id);
+
+            // Verificar se o hotel está presente em accommodation.hotelIdArray
+            const accommodationInfo = index !== -1 ? accommodation.typeStringArray[index] : "Informação não disponível";
+
+            // Encontrar as vagas disponíveis do hotel em vacancies.hotelIdArray
+            const vacanciesIndex = vacancies.hotelIdArray.indexOf(hotel.id);
+
+            // Calcular a soma das vagas disponíveis do hotel
+            let vacanciesSum = 0;
+            if (vacanciesIndex !== -1) {
+                for (let i = vacanciesIndex; i < vacancies.hotelIdArray.length; i++) {
+                    if (vacancies.hotelIdArray[i] === hotel.id) {
+                        vacanciesSum += vacancies.hotelVacanciesArray[i];
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            return {
+                ...hotel,
+                accommodation: accommodationInfo,
+                vacanciesSum,
+            };
+        }),
         rooms: hotelsRoomsBookings.rooms,
         bookings: hotelsRoomsBookings.bookings,
         accommodation,
-        vacancies
+        vacancies,
     };
 
     return sendableObject;
