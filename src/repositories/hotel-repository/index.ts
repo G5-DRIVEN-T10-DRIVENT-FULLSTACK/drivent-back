@@ -9,6 +9,8 @@ async function getHotelsRoomsBookings() {
     const allHotels = await prisma.hotel.findMany();
     // Consulta para retornar todos os Quartos
     const allRooms = await prisma.room.findMany();
+
+    allRooms.sort((room1, room2) => room1.hotelId - room2.hotelId);
     // Consulta para retornar todas as Reservas
     const allBookings = await prisma.booking.findMany();
     return {

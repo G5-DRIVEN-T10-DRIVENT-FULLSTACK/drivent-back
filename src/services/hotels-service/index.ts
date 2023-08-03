@@ -3,7 +3,7 @@ import enrollmentRepository from "@/repositories/enrollment-repository";
 import ticketRepository from "@/repositories/ticket-repository";
 import { notFoundError } from "@/errors";
 import { cannotListHotelsError } from "@/errors/cannot-list-hotels-error";
-import { AccommodationTypes } from "@/protocols";
+import { AccommodationTypes, vacanciesTypes } from "@/protocols";
 
 async function getHotelsRoomsBookings(userId: number) {
     //Tem enrollment?
@@ -24,6 +24,7 @@ async function getHotelsRoomsBookings(userId: number) {
     //console.log(hotelsRoomsBookingsArray);
     const roomsArray = hotelsRoomsBookings.rooms;
     const hotelsArray = hotelsRoomsBookings.hotels;
+    const bookingsArray = hotelsRoomsBookings.bookings;
     //console.log(roomsArray);
     //const roomWithCapacitySingle = (!!roomsArray.find((r) => r.capacity === 1)) ? "Single" : false;
     //const roomWithCapacityDouble = (!!roomsArray.find((r) => r.capacity === 2)) ? "Double" : false;
@@ -104,11 +105,37 @@ async function getHotelsRoomsBookings(userId: number) {
         hotelImageArray
     };
 
-    console.log('accommodation', accommodation);
+    function getAvailableRoomCapacity(roomId: number): number {
+        const room = roomsArray.find((room) => room.id === roomId);
+        if (!room) return 0;
 
+        const totalBookings = bookingsArray.filter((b) => b.roomId === roomId).length;
+        const availableCapacity = room.capacity - totalBookings;
+        return availableCapacity >= 0 ? availableCapacity : 0;
+    }
+
+
+    let hotelVacanciesArray: number[] = [];
+    let hotelIdRoomArray: number[] = [];
+    roomsArray.forEach((r) => {
+        const availableCapacity = getAvailableRoomCapacity(r.id);
+        hotelVacanciesArray.push(availableCapacity);
+        hotelIdRoomArray.push(r.hotelId);
+        //console.log(`Quarto ${r.name} (hotelId: ${r.hotelId}) - Vagas disponíveis: ${availableCapacity}`);
+    });
+
+    const vacancies: vacanciesTypes = {
+        hotelIdArray: hotelIdRoomArray,
+        hotelVacanciesArray
+    }
+
+    console.log('accommodation', accommodation);
+    console.log('vacancies', vacancies);
 
     return hotelsRoomsBookings;
 }
+
+
 
 async function listHotels(userId: number) {
     //Tem enrollment?

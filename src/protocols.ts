@@ -3,6 +3,11 @@ export type ApplicationError = {
     message: string;
 };
 
+export type vacanciesTypes = {
+    hotelIdArray: number[],
+    hotelVacanciesArray: number[]
+}
+
 export type AccommodationTypes = {
     hotelIdArray: number[];
     typeStringArray: string[];
