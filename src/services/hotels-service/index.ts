@@ -4,6 +4,7 @@ import ticketRepository from "@/repositories/ticket-repository";
 import { notFoundError } from "@/errors";
 import { cannotListHotelsError } from "@/errors/cannot-list-hotels-error";
 import { AccommodationTypes, vacanciesTypes } from "@/protocols";
+import redis, { DEFAULT_EXP } from "@/config/redis";
 
 async function getHotelsRoomsBookings(userId: number) {
     //Tem enrollment?
@@ -17,7 +18,7 @@ async function getHotelsRoomsBookings(userId: number) {
     if (!ticket || ticket.status === "RESERVED" || !ticket.TicketType.includesHotel) {
         throw cannotListHotelsError();
     }
-    if(ticket.TicketType.isRemote){
+    if (ticket.TicketType.isRemote) {
         throw Error("NoHotel")
     }
     const hotelsRoomsBookings = await hotelRepository.getHotelsRoomsBookings();
@@ -182,6 +183,11 @@ async function getHotelsRoomsBookings(userId: number) {
 
 async function listHotels(userId: number) {
     //Tem enrollment?
+    const cacheKey = `listHotels:${userId}`;
+    const cachedEnrrolment = await redis.get(cacheKey);
+
+    if (cachedEnrrolment) return JSON.parse(cachedEnrrolment);
+
     const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
     if (!enrollment) {
         throw notFoundError();
@@ -192,22 +198,39 @@ async function listHotels(userId: number) {
     if (!ticket || ticket.status === "RESERVED" || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel) {
         throw cannotListHotelsError();
     }
+
+    redis.setEx(cacheKey, DEFAULT_EXP, JSON.stringify(ticket));
 }
 
 async function getHotels(userId: number) {
     await listHotels(userId);
 
+    const cacheKey = `getHotels:${userId}`;
+    const cachedHotels = await redis.get(cacheKey);
+
+    if (cachedHotels) return JSON.parse(cachedHotels);
+
     const hotels = await hotelRepository.findHotels();
+    redis.setEx(cacheKey, DEFAULT_EXP, JSON.stringify(hotels));
+
     return hotels;
 }
 
 async function getHotelsWithRooms(userId: number, hotelId: number) {
     await listHotels(userId);
+
+    const cacheKey = `HotelsWithRooms:${userId}`;
+    const cachedHotelsWithRooms = await redis.get(cacheKey);
+
+    if (cachedHotelsWithRooms) return JSON.parse(cachedHotelsWithRooms);
+
     const hotel = await hotelRepository.findRoomsByHotelId(hotelId);
 
     if (!hotel) {
         throw notFoundError();
     }
+
+    redis.setEx(cacheKey, DEFAULT_EXP, JSON.stringify(hotel));
     return hotel;
 }
 
