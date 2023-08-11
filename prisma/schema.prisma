@@ -31,28 +31,30 @@ model Session {
 }
 
 model Event {
-  id                 Int      @id @default(autoincrement())
-  title              String   @db.VarChar(255)
-  backgroundImageUrl String   @db.VarChar(255)
-  logoImageUrl       String   @db.VarChar(255)
+  id                 Int             @id @default(autoincrement())
+  title              String          @db.VarChar(255)
+  backgroundImageUrl String          @db.VarChar(255)
+  logoImageUrl       String          @db.VarChar(255)
   startsAt           DateTime
   endsAt             DateTime
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  ActivityPlace      ActivityPlace[]
 }
 
 model Enrollment {
-  id        Int       @id @default(autoincrement())
-  name      String    @db.VarChar(255)
-  cpf       String    @db.VarChar(255)
+  id        Int        @id @default(autoincrement())
+  name      String     @db.VarChar(255)
+  cpf       String     @db.VarChar(255)
   birthday  DateTime
-  phone     String    @db.VarChar(255)
-  userId    Int       @unique
-  User      User      @relation(fields: [userId], references: [id])
+  phone     String     @db.VarChar(255)
+  userId    Int        @unique
+  User      User       @relation(fields: [userId], references: [id])
   Address   Address[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   Ticket    Ticket[]
+  Activity  Activity[]
 }
 
 model Address {
@@ -137,4 +139,26 @@ model Booking {
   roomId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model ActivityPlace {
+  id        Int        @id @default(autoincrement())
+  name      String
+  Event     Event[]
+  Activity  Activity[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Activity {
+  id              Int           @id @default(autoincrement())
+  name            String
+  ActivityPlace   ActivityPlace @relation(fields: [activityPlaceId], references: [id])
+  activityPlaceId Int
+  startTime       DateTime
+  endTime         DateTime
+  capacity        Int           @default(27)
+  Enrollment      Enrollment[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 }
