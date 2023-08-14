@@ -152,7 +152,7 @@ async function main() {
   const hotel1 = await prisma.hotel.create({
     data: {
       image: "https://media-cdn.tripadvisor.com/media/photo-s/1c/b3/e4/10/costao-do-santinho-resort.jpg",
-      name: "Driven Hamptons",
+      name: "Driven Beach",
     }
   });
 
@@ -190,11 +190,11 @@ async function main() {
     return array;
   }
 
-  const roomsHotel1 = createRooms(hotel1.id, 3);
+  const roomsHotel1 = createRooms(hotel1.id, 2);
   await prisma.room.createMany({ data: roomsHotel1 });
-  const roomshotel2 = createRooms(hotel2.id, 4);
+  const roomshotel2 = createRooms(hotel2.id, 3);
   await prisma.room.createMany({ data: roomshotel2 });
-  const roomsHotel3 = createRooms(hotel3.id, 5);
+  const roomsHotel3 = createRooms(hotel3.id, 4);
   await prisma.room.createMany({ data: roomsHotel3 });
 
   console.log({ event });
