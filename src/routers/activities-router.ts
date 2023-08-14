@@ -5,7 +5,7 @@ import { enrollInActivity, getActivitiesEnrollments, unEnrollInActivity, getActi
 const activitiesRouter = Router();
 
 activitiesRouter
-//   .all("/*", authenticateToken)
+  .all("/*", authenticateToken)
   .post("/:activityId", enrollInActivity)
   .get("/:activityId", getActivitiesEnrollments)
   .delete("/:activityId", unEnrollInActivity)
