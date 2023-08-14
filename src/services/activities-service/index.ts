@@ -15,15 +15,10 @@ async function unEnrollInActivity(userId: number, activityId: number) {
   return await activityRepository.unEnrollInActivity(enrollment.id, activityId);
 }
 
-async function getActivitiesByDay(date: any) {
-  return await activityRepository.activitiesByDay(date);
-}
-
 const activityService = {
   enrollInActivity,
   getActivitiesEnrollments,
-  unEnrollInActivity,
-  getActivitiesByDay
-};
+  unEnrollInActivity
+}
 
 export default activityService;

@@ -39,14 +39,3 @@ export async function unEnrollInActivity(req: AuthenticatedRequest, res: Respons
     res.sendStatus(httpStatus.NOT_FOUND);
   }
 }
-
-export async function getActivitiesByDay(req: AuthenticatedRequest, res: Response) {
-  const { date } = req.params;
-
-  try {
-    const activityByDayList = await activityService.getActivitiesByDay(date);
-    res.send({ activityByDayList });
-  } catch (err) {
-    res.sendStatus(httpStatus.NOT_FOUND);
-  }
-}
