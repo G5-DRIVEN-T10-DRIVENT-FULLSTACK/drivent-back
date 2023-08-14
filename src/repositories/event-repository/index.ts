@@ -1,7 +1,14 @@
 import { prisma } from "@/config";
+import redis from '@/config/redis';
 
 async function findFirst() {
-  return prisma.event.findFirst({
+  const eventRedis = await redis.get('event');
+
+  if (eventRedis) {
+    return JSON.parse(eventRedis);
+  }
+
+  const value = await prisma.event.findFirst({
     include: {
       ActivityPlace: {
         include: {
@@ -18,6 +25,8 @@ async function findFirst() {
       }
     }
   });
+  await redis.set('event', JSON.stringify(value));
+  return value;
 }
 
 const eventRepository = {

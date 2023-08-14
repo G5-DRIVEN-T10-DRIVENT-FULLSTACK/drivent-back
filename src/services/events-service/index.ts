@@ -5,7 +5,7 @@ import { Event } from "@prisma/client";
 import dayjs from "dayjs";
 import redis, { DEFAULT_EXP } from "@/config/redis";
 
-async function getFirstEvent(): Promise<GetFirstEventResult> {
+async function getFirstEvent(): Promise<Omit<GetFirstEventResult, 'createdAt' | 'updatedAt'>> {
   const cacheKey = "FirstEvent";
   const cachedEvent = await redis.get(cacheKey);
 
