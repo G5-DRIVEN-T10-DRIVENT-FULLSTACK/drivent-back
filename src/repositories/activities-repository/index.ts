@@ -42,6 +42,9 @@ async function activitiesByDay(date: any) {
         gte: startOfDay,
         lte: endOfDay
       }
+    }, 
+    orderBy: {
+      startTime: "asc"
     }
   });
 
