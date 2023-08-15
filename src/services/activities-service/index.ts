@@ -10,6 +10,10 @@ async function getActivitiesEnrollments(activityId: number) {
   return await activityRepository.getActivitiesEnrollments(activityId);
 }
 
+async function getActivitiesByDay(date: any) {
+  return await activityRepository.activitiesByDay(date);
+}
+
 async function unEnrollInActivity(userId: number, activityId: number) {
   const enrollment = await enrollmentsService.getOneWithAddressByUserId(userId);
   return await activityRepository.unEnrollInActivity(enrollment.id, activityId);
@@ -18,6 +22,7 @@ async function unEnrollInActivity(userId: number, activityId: number) {
 const activityService = {
   enrollInActivity,
   getActivitiesEnrollments,
+  getActivitiesByDay,
   unEnrollInActivity
 }
 
