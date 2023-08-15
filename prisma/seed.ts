@@ -129,7 +129,7 @@ async function main() {
                 createdAt: new Date(Date.now()),
                 updatedAt: new Date(Date.now()),
                 startTime: dayjs().add(day, "day").startOf("day").add(9, "hour").toDate(),
-                endTime: dayjs().add(day, "day").startOf("day").add(9, "hour").clone().add(1, "hour").toDate(),
+                endTime: dayjs().add(day, "day").startOf("day").add(9, "hour").clone().add(2, "hour").toDate(),
                 capacity: 27,
             }
         });
