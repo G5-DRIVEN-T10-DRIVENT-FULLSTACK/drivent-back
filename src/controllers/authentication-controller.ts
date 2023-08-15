@@ -9,7 +9,6 @@ export async function singInPost(req: Request, res: Response) {
 
   try {
     const result = await authenticationService.signIn({ email, password });
-
     return res.status(httpStatus.OK).send(result);
   } catch (error) {
     return res.status(httpStatus.UNAUTHORIZED).send({});
@@ -17,17 +16,10 @@ export async function singInPost(req: Request, res: Response) {
 }
 
 export async function signInGitHub(req: Request, res: Response) {
-  console.log(req.body.code);
   try {
     const token = await exchangeCodeForAccessToken(req.body.code);
-    console.log(token);
-
     const user = await fetchUser(token);
-
-    console.log(user.login);
-
     const result = await authenticationService.checkIfUserExists(user.login);
-
     return res.status(httpStatus.OK).send(result);
   } catch (error) {
     return res.status(httpStatus.UNAUTHORIZED).send({});
@@ -54,7 +46,6 @@ async function exchangeCodeForAccessToken(code: string) {
   });
 
   const token = data.split('&')[0].split('=')[1];
-  console.log(token);
   return token;
 }
 
@@ -65,7 +56,6 @@ async function fetchUser(token: string) {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(user);
     return user;
   } catch (error) {
     throw unauthorizedError();
